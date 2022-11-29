@@ -2,17 +2,16 @@
 # CS110 Project Proposal
 # << Project Title >>
 ## CS 110 Final Project
-### << Semester, Year >>
+###  Fall, 2022 
 ### [Assignment Description](https://docs.google.com/document/d/1H4R6yLL7som1lglyXWZ04RvTp_RvRFCCBn6sqv-82ps/edit?usp=sharing)
 
 << [repl](#) >>
 https://replit.com/join/cvruezeqem-johnnylu1
 << [link to demo presentation slides](#) >>
 
-### Team: << Johnny and Emily >>
-#### << Team Members >>
-Johnny Lu
-Emily Mendez
+### Team: Team 25
+####  Johnny Lu and Emily Mendez
+
 ***
 
 ## Project Description
@@ -43,7 +42,7 @@ Emily Mendez
     * << A simple drawing that shows the class relationships in your code (see below for an example). This does not need to be overly detailed, but should show how your code fits into the Model/View/Controller paradigm. >>
         * ![class diagram](assets/class_diagram.jpg) 
 * Classes
-    * <<
+  *
 1. < Player > 
     * __init__
         * < Character that the user will be moving around and controlling. The player will have initial health that will decrease upon contact with mobs. Speed is preset. >
@@ -57,7 +56,7 @@ Emily Mendez
 3. < Door > 
     * __init__
         * < Player will interact with this to move onto next stage. Door will prompt a specific question in which the Player must answer correctly. >
-    * < Currently not sure about the methods. Will most likely include one that has to deal with the administration of questions and the acceptance of the answer > >>
+    * < Currently not sure about the methods. Will most likely include one that has to deal with the administration of questions and the acceptance of the answer > 
 
 
 ## Project Structure and File List

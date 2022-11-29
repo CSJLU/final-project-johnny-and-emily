@@ -1,17 +1,32 @@
 import pygame
 
 
-class Player(pygame.sprite.Sprite, health):
+class Player(pygame.sprite.Sprite):
   def __init__(self):
     super().__init__(self)
-    self.speed = 2
-    self.health = health
-    self.direction = "Right"
-    self.image = pygame.image.load("assets/player.png")
+    #self.speed = 2
+    #self.health = health
+    #self.direction = "Right"
+    self.image = pygame.image.load("assets/girl1.png")
     self.rect = self.image.get_rect()
-    '''
+    #self.speed = 1
+
+
+
+
+
+
+
+
+
+
+  
+
+  def update(self):
+    self.screen.blit(self.image, self.rect)
+  '''
     Creates the Player that user will be controlling
-    '''
+  '''
   def move_up(self):
     self.rect.y -= self.speed
     '''

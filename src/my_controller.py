@@ -1,6 +1,30 @@
 
-class Controller:
+     
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   
+'''
   def __init__(self):
     #setup pygame data
     
@@ -31,3 +55,4 @@ class Controller:
       #update data
 
       #redraw
+'''
