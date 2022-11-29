@@ -1,4 +1,4 @@
-
+#most of code is written in main for now, will transfer things over afterwards (please check main.py for Controller class)
      
     
 
