@@ -1,7 +1,7 @@
 import pygame
 import random
 
-class Mob(pygame.sprite.Sprite):
+class Enemy(pygame.sprite.Sprite):
   def __init__(self):
     super().__init__(self)
     self.speed = 1

@@ -11,36 +11,68 @@ tile_size = 25
 class Player():
   def __init__(self, x, y):
     self.images_right = []
+    self.images_left = []
     self.index = 0
     self.counter = 0
-    #for num in range(1, 21):
-      #img = pygame.image.load(f'assets/girl{num}.png')
-    img = pygame.image.load('assets/idle1.png')
-    self.image = pygame.transform.scale(img, (35, 70))
+    for num in range(1, 22):
+      img_right = pygame.image.load(f'assets/girl{num}.png')
+      img_right = pygame.transform.scale(img_right, (35, 70))
+      img_left = pygame.transform.flip(img_right, True, False)
+      self.images_right.append(img_right)
+      self.images_left.append(img_left)
+    self.image = self.images_right[self.index]
     self.rect = self.image.get_rect()
     self.rect.x = x
     self.rect.y = y
     self.width = self.image.get_width()
     self.height = self.image.get_height()
     self.velocity_y = 0
-    self.has_jumped = False
+    self.has_jumped = True
+    self.direction = 0
 
   def update(self):
     dx = 0
     dy = 0
-    #gets key presse inputs
+    walk_cd = 1
+    
+    #gets key pressed inputs
     key = pygame.key.get_pressed()
     if key[pygame.K_a]:
       dx -= 4
+      self.counter += 1
+      self.direction = -1
     if key[pygame.K_d]:
       dx += 4
+      self.counter += 1
+      self.direction = 1
     if key[pygame.K_w] and self.has_jumped == False:
-      self.velocity_y = -13
+      self.velocity_y = -11
       self.has_jumped = True
     if key[pygame.K_w] == False:
       self.has_jumped = False
+    if key[pygame.K_a] == False and key[pygame.K_d] == False:
+      self.counter = 0 
+      self.index = 0
+      if self.direction == 1:
+        self.image = self.images_right[self.index]
+      if self.direction == -1:
+        self.image = self.images_left[self.index]
     
+    #character animation
+    if self.counter > walk_cd:
+      self.counter = 0
+      self.index += 1
+      if self.index >= len(self.images_right):
+        self.index = 0
+      if self.direction == 1:
+        self.image = self.images_right[self.index]
+      if self.direction == -1:
+        self.image = self.images_left[self.index]
 
+  
+#if collide, allowed to jump
+
+      
     #creates gravity effect
     self.velocity_y += 1
     if self.velocity_y > 10:
@@ -145,9 +177,6 @@ tile_data = [
 
 level = Level(tile_data)
 
-
-class Dirt():
-  pass
 
 
 

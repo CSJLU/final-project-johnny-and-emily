@@ -42,21 +42,31 @@ https://replit.com/join/cvruezeqem-johnnylu1
     * << A simple drawing that shows the class relationships in your code (see below for an example). This does not need to be overly detailed, but should show how your code fits into the Model/View/Controller paradigm. >>
         * ![class diagram](assets/class_diagram.jpg) 
 * Classes
-  *
-1. < Player > 
-    * __init__
-        * < Character that the user will be moving around and controlling. The player will have initial health that will decrease upon contact with mobs. Speed is preset. >
-    * < Methods include jumping. Crouching. Moving to the left and moving to the right. >
+1. Player
+Character that the user will be moving around and controlling. The player will have initial health that will decrease upon contact with mobs. The player is moving at constant speed.
+Methods: __init__, update.
+Instance Variables: self.images_right, self.images_left, self.index, self.counter, self.rect, self.rect.x, self.rect.y, self.width, self.height, self.velocity_y, self.has_jumped, self.direction, self.images
 
-2. < Mob > 
-    * __init__
-        * < Responsible for the monsters that will take away health from the player upon contact. They will have a preset speed. >
-    * < They will be constantly moving left or right through the randomized move left or move right methods. >
+2. Level
+Determines how the tiles are arranged
+Methods: __init__, draw
+Instance Variables: None
 
-3. < Door > 
-    * __init__
-        * < Player will interact with this to move onto next stage. Door will prompt a specific question in which the Player must answer correctly. >
-    * < Currently not sure about the methods. Will most likely include one that has to deal with the administration of questions and the acceptance of the answer > 
+3. Enemy
+Responsible for taking health away from the Player or ultimately ending the game if health drops to zero. 
+They will be constantly moving left or right at a constant pace.
+Methods: __init__, update,
+Instance Variables: self.rect, self.images, More TBD
+
+4. Door
+Player will interact with this to move onto next stage. Door will prompt a specific question in which the Player must answer correctly.
+Methods: TBD
+Instance Variables: TBD
+
+5. Controller
+Methods: __init__, mainloop, more TBD
+Instance Variables: TBD
+
 
 
 ## Project Structure and File List
