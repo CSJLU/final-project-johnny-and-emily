@@ -3,8 +3,8 @@ import pygame
 clock = pygame.time.Clock()
 fps = 60
 background_img = pygame.image.load('assets/BG.png')
-width = 500
-height = 500
+width = 750
+height = 650
 screen = pygame.display.set_mode((width, height))
 tile_size = 25
 
@@ -16,10 +16,12 @@ class Player():
     #for num in range(1, 21):
       #img = pygame.image.load(f'assets/girl{num}.png')
     img = pygame.image.load('assets/idle1.png')
-    self.image = pygame.transform.scale(img, (50, 100))
+    self.image = pygame.transform.scale(img, (35, 70))
     self.rect = self.image.get_rect()
     self.rect.x = x
     self.rect.y = y
+    self.width = self.image.get_width()
+    self.height = self.image.get_height()
     self.velocity_y = 0
     self.has_jumped = False
 
@@ -38,13 +40,6 @@ class Player():
     if key[pygame.K_w] == False:
       self.has_jumped = False
     
-    #if key[pygame.K_w] == False:
-      #self.has_jumped = False
-      #self.has_jumped = True
-    #if key[pygame.K_w] == False: 
-      #self.has_jumped = False 
-
-
 
     #creates gravity effect
     self.velocity_y += 1
@@ -52,6 +47,20 @@ class Player():
       self.velocity_y = 10
     dy += self.velocity_y
 
+    #collision
+    for tile in level.tile_list:
+      #collision in x direction
+      if tile[1].colliderect(self.rect.x + dx, self.rect.y, self.width, self.height):
+        dx = 0
+      #collision in y direction
+      if tile[1].colliderect(self.rect.x, self.rect.y + dy, self.width, self.height):
+        #checking for collision below or above tile
+        if self.velocity_y < 0:
+          dy = tile[1].bottom - self.rect.top
+          self.vel_y = 0
+        elif self.velocity_y >= 0:
+          dy = tile[1].top - self.rect.bottom
+    
 
     self.rect.x += dx
     self.rect.y += dy
@@ -62,9 +71,8 @@ class Player():
       dy = 0
     #puts player onto bottom of screen
     screen.blit(self.image, self.rect)
-    
 
-player = Player(100, 400)
+player = Player(100, 625)
 
 
 class Level():
@@ -90,7 +98,7 @@ class Level():
           self.tile_list.append(tile)
         if tile == 2:
           dirt = pygame.transform.scale(dirt_tile, (tile_size, tile_size))
-          dirt_rect = grass.get_rect()
+          dirt_rect = dirt.get_rect()
           dirt_rect.x = column_count * tile_size
           dirt_rect.y = row_count * tile_size
           tile = (dirt, dirt_rect)
@@ -105,28 +113,36 @@ class Level():
 
 
 
+
 tile_data = [
-[],
-[],
-[],
-[],
-[],
-[],
-[],
-[],
-[],
-[],
-[],
-[],
-[],
-[],
-[],
-[],
-[],
-[],
-[],
-[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  ]
+[2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2]
 ]        
+
 level = Level(tile_data)
 
 
