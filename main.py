@@ -21,6 +21,9 @@ class Player():
       img_left = pygame.transform.flip(img_right, True, False)
       self.images_right.append(img_right)
       self.images_left.append(img_left)
+    dead_img = pygame.image.load('assets/dead.png')
+    self.image_dead = pygame.transform.scale(dead_img, (40, 80))
+    #self.image_dead = pygame.image.load('assets/dead.png')
     self.image = self.images_right[self.index]
     self.rect = self.image.get_rect()
     self.rect.x = x
@@ -102,7 +105,8 @@ class Player():
       self.rect.x += dx
       self.rect.y += dy
   
-  
+    elif game_over == 1:
+      self.image = self.image_dead
     #puts player onto bottom of screen
     screen.blit(self.image, self.rect)
 
@@ -230,11 +234,13 @@ class Controller():
     while run:
       clock.tick(fps)
       screen.blit(background_img, (0, 0))
-      
-      game_over = player.update(game_over)
       level.draw()
-      
-      slime_group.update()
+
+      if game_over == 0:
+        slime_group.update()
+        
+      game_over = player.update(game_over)
+
       slime_group.draw(screen)
       
       for event in pygame.event.get():
