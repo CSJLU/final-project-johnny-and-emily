@@ -8,31 +8,11 @@ height = 650
 screen = pygame.display.set_mode((width, height))
 tile_size = 25
 game_over = 0
+restart_img = pygame.image.load('assets/restart.png')
 
 class Player():
   def __init__(self, x, y):
-    self.images_right = []
-    self.images_left = []
-    self.index = 0
-    self.counter = 0
-    for num in range(1, 22):
-      img_right = pygame.image.load(f'assets/girl{num}.png')
-      img_right = pygame.transform.scale(img_right, (35, 70))
-      img_left = pygame.transform.flip(img_right, True, False)
-      self.images_right.append(img_right)
-      self.images_left.append(img_left)
-    dead_img = pygame.image.load('assets/dead.png')
-    self.image_dead = pygame.transform.scale(dead_img, (40, 80))
-    #self.image_dead = pygame.image.load('assets/dead.png')
-    self.image = self.images_right[self.index]
-    self.rect = self.image.get_rect()
-    self.rect.x = x
-    self.rect.y = y
-    self.width = self.image.get_width()
-    self.height = self.image.get_height()
-    self.velocity_y = 0
-    self.has_jumped = True
-    self.direction = 0
+    self.reset(x, y)
 
   def update(self, game_over):
     dx = 0
@@ -49,7 +29,7 @@ class Player():
         dx += 4
         self.counter += 1
         self.direction = 1
-      if key[pygame.K_w] and self.has_jumped == False:
+      if key[pygame.K_w] and self.has_jumped == False and self.in_air ==False:
         self.velocity_y = -11
         self.has_jumped = True
       if key[pygame.K_w] == False:
@@ -84,6 +64,7 @@ class Player():
       dy += self.velocity_y
   
       #collision with grass and dirt tiles
+      self.in_air = True
       for tile in level.tile_list:
         #collision in x direction
         if tile[1].colliderect(self.rect.x + dx, self.rect.y, self.width, self.height):
@@ -96,11 +77,15 @@ class Player():
             self.vel_y = 0
           elif self.velocity_y >= 0:
             dy = tile[1].top - self.rect.bottom
+            self.in_air = False
   
       #collision with enemies
       if pygame.sprite.spritecollide(self, slime_group, False):
         game_over = 1
-  
+
+      #check collision with mushroom
+      if pygame.sprite.spritecollide(self, door_group, False):
+        game_over = 2
             
       self.rect.x += dx
       self.rect.y += dy
@@ -112,14 +97,82 @@ class Player():
 
     return game_over 
 
+  def reset(self, x, y):
+    self.images_right = []
+    self.images_left = []
+    self.index = 0
+    self.counter = 0
+    for num in range(1, 22):
+      img_right = pygame.image.load(f'assets/girl{num}.png')
+      img_right = pygame.transform.scale(img_right, (35, 70))
+      img_left = pygame.transform.flip(img_right, True, False)
+      self.images_right.append(img_right)
+      self.images_left.append(img_left)
+    dead_img = pygame.image.load('assets/dead.png')
+    self.image_dead = pygame.transform.scale(dead_img, (40, 80))
+    #self.image_dead = pygame.image.load('assets/dead.png')
+    self.image = self.images_right[self.index]
+    self.rect = self.image.get_rect()
+    self.rect.x = x
+    self.rect.y = y
+    self.width = self.image.get_width()
+    self.height = self.image.get_height()
+    self.velocity_y = 0
+    self.has_jumped = True
+    self.direction = 0
+    self.in_air = True
+
+class Door(pygame.sprite.Sprite):
+  def __init__(self, x, y):
+    pygame.sprite.Sprite.__init__(self)
+    door_img = pygame.image.load('assets/mushroom1.png')
+    self.image = pygame.transform.scale(door_img, (20, 30))
+    self.rect = self.image.get_rect()
+    self.rect.x = x 
+    self.rect.y = y
+
+class Button():
+  def __init__(self, x, y, image):
+    self.image = image
+    self.rect = self.image.get_rect()
+    self.rect.x = x
+    self.rect.y = y
+    self.clicked = False
+
+  def draw(self):
+    click_action = False
+
+    #mouse position is obtained
+    mouse_pos = pygame.mouse.get_pos()
+
+    #check if mouse is over the button and if mouse has clicked on the button
+    if self.rect.collidepoint(mouse_pos):
+      if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
+        click_action = True
+        self.clicked = True
+        
+    if pygame.mouse.get_pressed()[0] == 0:
+      self.clicked = False
+        
+    
+
+    #draws the button
+    screen.blit(self.image, self.rect)
+    return click_action
+  
+
 player = Player(100, 625)
 slime_group = pygame.sprite.Group()
+door_group = pygame.sprite.Group()
+button_sized = pygame.transform.scale(restart_img, (100, 100))
+restart_button = Button(width // 2 - 50, height // 2, button_sized)
+
 
 class Enemy(pygame.sprite.Sprite):
   def __init__(self, x, y):
     pygame.sprite.Sprite.__init__(self)
     slime_img = pygame.image.load('assets/slime.png')
-    self.image = pygame.transform.scale(slime_img, (40, 50))
+    self.image = pygame.transform.scale(slime_img, (30, 40))
     self.rect = self.image.get_rect()
     self.rect.x = x
     self.rect.y = y
@@ -133,7 +186,8 @@ class Enemy(pygame.sprite.Sprite):
       self.move_direction *= -1
       self.move_counter *= -1
     
-      
+
+
     
 
 
@@ -166,9 +220,12 @@ class Level():
           dirt_rect.y = row_count * tile_size
           tile = (dirt, dirt_rect)
           self.tile_list.append(tile)
-        if tile ==3:
-          slime = Enemy(column_count * tile_size, row_count * tile_size - 10)
+        if tile == 3:
+          slime = Enemy(column_count * tile_size, row_count * tile_size - 1)
           slime_group.add(slime)
+        if tile == 4: 
+          door = Door(column_count * tile_size, row_count * tile_size - 4)
+          door_group.add(door)
         column_count += 1
       row_count += 1  
 
@@ -184,21 +241,21 @@ tile_data = [
 [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
 [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
 [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
 [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 2],
 [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2],
 [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
 [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2],
 [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2],
-[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 2, 2, 2, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2],
 [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2],
-[2, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
 [2, 0, 0, 0, 0, 2, 0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
 [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
 [2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-[2, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
 [2, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-[2, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 2, 0, 0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 2],
 [2, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 2],
 [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 0, 2],
 [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
@@ -215,8 +272,7 @@ level = Level(tile_data)
 
 
 
-class Door():
-  pass
+  
 
 
 
@@ -238,11 +294,18 @@ class Controller():
 
       if game_over == 0:
         slime_group.update()
+
+      if game_over == 1:
+        if restart_button.draw():
+          player.reset(100, 625)
+          game_over = 0
+      #player has reached the mushroom and won
         
       game_over = player.update(game_over)
 
-      slime_group.draw(screen)
       
+      slime_group.draw(screen)
+      door_group.draw(screen)
       for event in pygame.event.get():
         if event.type == pygame.QUIT:
           run =  False
