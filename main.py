@@ -7,8 +7,11 @@ width = 750
 height = 650
 screen = pygame.display.set_mode((width, height))
 tile_size = 25
+main_menu = True
 game_over = 0
 restart_img = pygame.image.load('assets/restart.png')
+start_img = pygame.image.load('assets/play.png')
+quit_img = pygame.image.load('assets/quit.png')
 
 class Player():
   def __init__(self, x, y):
@@ -164,9 +167,12 @@ class Button():
 player = Player(100, 625)
 slime_group = pygame.sprite.Group()
 door_group = pygame.sprite.Group()
-button_sized = pygame.transform.scale(restart_img, (100, 100))
-restart_button = Button(width // 2 - 50, height // 2, button_sized)
-
+restart_sized = pygame.transform.scale(restart_img, (100, 100))
+restart_button = Button(width // 2 - 50, height // 2, restart_sized)
+start_sized = pygame.transform.scale(start_img, (300, 300))
+start_button = Button(50, 200, start_sized)
+quit_sized = pygame.transform.scale(quit_img, (300, 300))
+quit_button = Button(400, 200, quit_sized)
 
 class Enemy(pygame.sprite.Sprite):
   def __init__(self, x, y):
@@ -286,26 +292,35 @@ class Controller():
 
   def mainloop(self):
     run = True
+    main_menu = True
     game_over = 0
     while run:
       clock.tick(fps)
       screen.blit(background_img, (0, 0))
-      level.draw()
 
-      if game_over == 0:
-        slime_group.update()
-
-      if game_over == 1:
-        if restart_button.draw():
-          player.reset(100, 625)
-          game_over = 0
-      #player has reached the mushroom and won
+      if main_menu == True:
+        if quit_button.draw():
+          run = False
+          exit()
+        if start_button.draw():
+          main_menu = False
+      else:
+        level.draw()
+  
+        if game_over == 0:
+          slime_group.update()
+  
+        if game_over == 1:
+          if restart_button.draw():
+            player.reset(100, 625)
+            game_over = 0
+        #player has reached the mushroom and won
+          
+        game_over = player.update(game_over)
+  
         
-      game_over = player.update(game_over)
-
-      
-      slime_group.draw(screen)
-      door_group.draw(screen)
+        slime_group.draw(screen)
+        door_group.draw(screen)
       for event in pygame.event.get():
         if event.type == pygame.QUIT:
           run =  False
