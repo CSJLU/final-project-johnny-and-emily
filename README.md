@@ -88,8 +88,7 @@ The Project is broken down into the following file structure:
    * Outline the team member roles and who was responsible for each class/method, both individual and collaborative.
 
 ## Testing
-
-* << Describe your testing strategy for your project. >>
+After writing a couple lines of code, I would always run the code to make sure there was no problems. If I was using a counter, I would utilize print statements to make sure the counter is properly implemented. 
 
 ## ATP
 

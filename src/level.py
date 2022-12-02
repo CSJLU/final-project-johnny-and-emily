@@ -1,6 +1,6 @@
 import pygame
 from src.constants import *
-from src.door import Door
+from src.mushroom import Mushroom
 from src.enemy import Enemy
 
 class Level():
@@ -9,12 +9,15 @@ class Level():
     #loads both the dirt and grass images
     dirt_tile = pygame.image.load('assets/dirttile.png')
     grass_tile = pygame.image.load('assets/grasstile.png')
-    self.door_group = pygame.sprite.Group()
+
+    #creation of sprite groups
+    self.mushroom_group = pygame.sprite.Group()
     self.slime_group = pygame.sprite.Group()
     
     #necessary tile numbers will be appended to here
     self.tile_list = []
-    
+
+    #determines what each number means in the tile_data and abstracts the important numbers (non-zero)
     row_count = 0
     for row in level_data:
       column_count = 0
@@ -37,8 +40,8 @@ class Level():
           slime = Enemy(column_count * tile_size, row_count * tile_size - 1)
           self.slime_group.add(slime)
         if tile == 4: 
-          door = Door(column_count * tile_size, row_count * tile_size - 4)
-          self.door_group.add(door)
+          mushroom = Mushroom(column_count * tile_size, row_count * tile_size - 4)
+          self.mushroom_group.add(mushroom)
         column_count += 1
       row_count += 1  
 

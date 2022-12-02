@@ -76,7 +76,7 @@ class Player():
         game_over = 1
 
       #check collision with mushroom
-      if pygame.sprite.spritecollide(self, level.door_group, False):
+      if pygame.sprite.spritecollide(self, level.mushroom_group, False):
         game_over = 2
             
       self.rect.x += dx
