@@ -1,50 +1,33 @@
 import pygame
-from src.door import Door
-from src.enemy import Enemy
-from src.level import Level
 from src.my_controller import Controller
-from src.player import Player
+from src.level import Level
+from src.door import Door
 from src.button import Button
+from src.player import Player
+from src.enemy import Enemy
+
+
+
+
+
+clock = pygame.time.Clock()
+fps = 60
+pygame.font.init()
+textfont = pygame.font.Font(None, 30) 
+background_img = pygame.image.load('assets/BG.png')
+
+slime_group = pygame.sprite.Group()
+door_group = pygame.sprite.Group()
 
 
 restart_img = pygame.image.load('assets/restart.png')
-start_img = pygame.image.load('assets/play.png')
-quit_img = pygame.image.load('assets/quit.png')
-end_timer = 0
-width = 750
-height = 650
-screen = pygame.display.set_mode((width, height))
-tile_size = 25
-main_menu = True
-game_over = 0
-
-
-
-
-
-
-
-
-player = Player(100, 625)
-
 restart_sized = pygame.transform.scale(restart_img, (100, 100))
-restart_button = Button(width // 2 - 50, height // 2, restart_sized)
+
+start_img = pygame.image.load('assets/play.png')
 start_sized = pygame.transform.scale(start_img, (300, 300))
-start_button = Button(50, 200, start_sized)
+
+quit_img = pygame.image.load('assets/quit.png')
 quit_sized = pygame.transform.scale(quit_img, (300, 300))
-quit_button = Button(400, 200, quit_sized)
-
-
-
-    
-
-
-    
-
-
-
-    
-
 
 tile_data = [
 [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
@@ -73,15 +56,23 @@ tile_data = [
 [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
 [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
 [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2]
-]        
-
-level = Level(tile_data)
-
-
+]  
+     
+    
 
 
 
-  
+
+
+end_timer = 0    
+main_menu = True
+game_over = 0
+
+
+
+
+
+
 
 
 

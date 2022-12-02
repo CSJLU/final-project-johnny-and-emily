@@ -1,7 +1,4 @@
 import pygame
-width = 750
-height = 650
-screen = pygame.display.set_mode((width, height))
 
 
 class Button():
@@ -32,4 +29,3 @@ class Button():
     #draws the button
     screen.blit(self.image, self.rect)
     return click_action
-  

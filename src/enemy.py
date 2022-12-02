@@ -1,6 +1,5 @@
 import pygame
-
-
+from src.constants import *
 
 class Enemy(pygame.sprite.Sprite):
   def __init__(self, x, y):
@@ -19,3 +18,5 @@ class Enemy(pygame.sprite.Sprite):
     if abs(self.move_counter) > 35:
       self.move_direction *= -1
       self.move_counter *= -1
+
+    

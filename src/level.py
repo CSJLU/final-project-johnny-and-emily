@@ -1,12 +1,7 @@
 import pygame
+from src.constants import *
 from src.door import Door
 from src.enemy import Enemy
-width = 750
-height = 650
-screen = pygame.display.set_mode((width, height))
-tile_size = 25
-slime_group = pygame.sprite.Group()
-door_group = pygame.sprite.Group()
 
 class Level():
   def __init__(self, level_data):
@@ -49,3 +44,6 @@ class Level():
   def draw(self):
     for tile in self.tile_list:
       screen.blit(tile[0], tile[1])
+
+
+
