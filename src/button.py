@@ -9,7 +9,7 @@ class Button():
     self.rect.y = y
     self.clicked = False
 
-  def draw(self):
+  def draw(self,screen):
     click_action = False
 
     #mouse position is obtained

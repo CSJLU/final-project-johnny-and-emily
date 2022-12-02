@@ -2,10 +2,11 @@ import pygame
 from src.constants import *
 
 class Player():
-  def __init__(self, x, y):
+  def __init__(self, x, y,screen):
+    self.screen = screen
     self.reset(x, y)
 
-  def update(self, game_over):
+  def update(self, game_over,level):
     dx = 0
     dy = 0
     walk_cd = 1
@@ -71,11 +72,11 @@ class Player():
             self.in_air = False
   
       #collision with enemies
-      if pygame.sprite.spritecollide(self, slime_group, False):
+      if pygame.sprite.spritecollide(self, level.slime_group, False):
         game_over = 1
 
       #check collision with mushroom
-      if pygame.sprite.spritecollide(self, door_group, False):
+      if pygame.sprite.spritecollide(self, level.door_group, False):
         game_over = 2
             
       self.rect.x += dx
@@ -84,7 +85,7 @@ class Player():
     elif game_over == 1:
       self.image = self.image_dead
     #puts player onto bottom of screen
-    screen.blit(self.image, self.rect)
+    self.screen.blit(self.image, self.rect)
 
     return game_over 
 

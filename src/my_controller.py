@@ -5,18 +5,31 @@ from src.level import Level
 from src.constants import *
 
 
-
-player = Player(100, 625)
-restart_button = Button(width // 2 - 50, height // 2, restart_sized)
-start_button = Button(50, 200, start_sized)
-quit_button = Button(400, 200, quit_sized)
-level = Level(tile_data)
-
-
 class Controller():
   def __init__(self):
     pygame.init()
-    #size = pygame.display.get_window_size()       
+    self.screen = pygame.display.set_mode((width, height))
+    
+    restart_img = pygame.image.load('assets/restart.png')
+    self.restart_sized = pygame.transform.scale(restart_img, (100, 100))
+    
+    start_img = pygame.image.load('assets/play.png')
+    self.start_sized = pygame.transform.scale(start_img, (300, 300))
+    
+    quit_img = pygame.image.load('assets/quit.png')
+    self.quit_sized = pygame.transform.scale(quit_img, (300, 300))
+    #size = pygame.display.get_window_size()
+    self.player = Player(100, 625,self.screen)
+    self.restart_button = Button(width // 2 - 50, height // 2, self.restart_sized)
+    self.start_button = Button(50, 200, self.start_sized)
+    self.quit_button = Button(400, 200, self.quit_sized)
+    self.level = Level(tile_data)
+
+    self.clock = pygame.time.Clock()
+
+    pygame.font.init()
+    self.textfont = pygame.font.Font(None, 30) 
+    self.background_img = pygame.image.load('assets/BG.png')
 
   def mainloop(self):
     run = True
@@ -24,34 +37,35 @@ class Controller():
     game_over = 0
     end_timer = 0
     while run:
-      clock.tick(fps)
+      self.clock.tick(fps)
+      self.screen.fill("blue")
 
       if main_menu == True:
-        if quit_button.draw():
+        if self.quit_button.draw(self.screen):
           run = False
           exit()
-        if start_button.draw():
+        if self.start_button.draw(self.screen):
           main_menu = False
       else:
-        screen.blit(background_img, (0, 0))
-        level.draw()
+        self.screen.blit(self.background_img, (0, 0))
+        self.level.draw(self.screen)
         
-        movement_instructions = textfont.render("Press WAD to move",  1, (255, 255, 255))
-        game_instructions = textfont.render("Get to the mushroom to win", 1, (255, 255, 255))
-        screen.blit(movement_instructions, (40, 500))
-        screen.blit(game_instructions, (40, 525))
-        win_text = textfont.render("YOU WIN!", 1, (255, 255, 0))
+        movement_instructions = self.textfont.render("Press WAD to move",  1, (255, 255, 255))
+        game_instructions = self.textfont.render("Get to the mushroom to win", 1, (255, 255, 255))
+        self.screen.blit(movement_instructions, (40, 500))
+        self.screen.blit(game_instructions, (40, 525))
+        win_text = self.textfont.render("YOU WIN!", 1, (255, 255, 0))
   
         if game_over == 0:
-          slime_group.update()
+          self.level.slime_group.update()
   
         if game_over == 1:
-          if restart_button.draw():
-            player.reset(100, 625)
+          if self.restart_button.draw(self.screen):
+            self.player.reset(100, 625)
             game_over = 0
 
         if game_over == 2:
-            player.reset(100, 625)
+            self.player.reset(100, 625)
             game_over = 0
             end_timer += 1
             if end_timer == 2:
@@ -62,11 +76,11 @@ class Controller():
 
 
           #if game_over == 2, blitz you win and then give user button to press (start menu)
-        game_over = player.update(game_over)
+        game_over = self.player.update(game_over,self.level)
   
         
-        slime_group.draw(screen)
-        door_group.draw(screen)
+        self.level.slime_group.draw(self.screen)
+        self.level.door_group.draw(self.screen)
       for event in pygame.event.get():
         if event.type == pygame.QUIT:
           run =  False

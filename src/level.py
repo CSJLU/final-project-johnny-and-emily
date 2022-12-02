@@ -9,6 +9,8 @@ class Level():
     #loads both the dirt and grass images
     dirt_tile = pygame.image.load('assets/dirttile.png')
     grass_tile = pygame.image.load('assets/grasstile.png')
+    self.door_group = pygame.sprite.Group()
+    self.slime_group = pygame.sprite.Group()
     
     #necessary tile numbers will be appended to here
     self.tile_list = []
@@ -33,15 +35,15 @@ class Level():
           self.tile_list.append(tile)
         if tile == 3:
           slime = Enemy(column_count * tile_size, row_count * tile_size - 1)
-          slime_group.add(slime)
+          self.slime_group.add(slime)
         if tile == 4: 
           door = Door(column_count * tile_size, row_count * tile_size - 4)
-          door_group.add(door)
+          self.door_group.add(door)
         column_count += 1
       row_count += 1  
 
       
-  def draw(self):
+  def draw(self,screen):
     for tile in self.tile_list:
       screen.blit(tile[0], tile[1])
 

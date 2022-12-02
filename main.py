@@ -10,24 +10,23 @@ from src.enemy import Enemy
 
 
 
-clock = pygame.time.Clock()
-fps = 60
+
 pygame.font.init()
 textfont = pygame.font.Font(None, 30) 
 background_img = pygame.image.load('assets/BG.png')
 
-slime_group = pygame.sprite.Group()
-door_group = pygame.sprite.Group()
+# slime_group = pygame.sprite.Group()
+# door_group = pygame.sprite.Group()
 
 
-restart_img = pygame.image.load('assets/restart.png')
-restart_sized = pygame.transform.scale(restart_img, (100, 100))
+# restart_img = pygame.image.load('assets/restart.png')
+# restart_sized = pygame.transform.scale(restart_img, (100, 100))
 
-start_img = pygame.image.load('assets/play.png')
-start_sized = pygame.transform.scale(start_img, (300, 300))
+# start_img = pygame.image.load('assets/play.png')
+# start_sized = pygame.transform.scale(start_img, (300, 300))
 
-quit_img = pygame.image.load('assets/quit.png')
-quit_sized = pygame.transform.scale(quit_img, (300, 300))
+# quit_img = pygame.image.load('assets/quit.png')
+# quit_sized = pygame.transform.scale(quit_img, (300, 300))
 
 tile_data = [
 [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
