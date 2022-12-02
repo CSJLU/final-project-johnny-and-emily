@@ -2,6 +2,8 @@ import pygame
 
 clock = pygame.time.Clock()
 fps = 60
+pygame.font.init()
+textfont = pygame.font.Font(None, 30) 
 background_img = pygame.image.load('assets/BG.png')
 width = 750
 height = 650
@@ -12,6 +14,9 @@ game_over = 0
 restart_img = pygame.image.load('assets/restart.png')
 start_img = pygame.image.load('assets/play.png')
 quit_img = pygame.image.load('assets/quit.png')
+end_timer = 0
+
+
 
 class Player():
   def __init__(self, x, y):
@@ -32,7 +37,7 @@ class Player():
         dx += 4
         self.counter += 1
         self.direction = 1
-      if key[pygame.K_w] and self.has_jumped == False and self.in_air ==False:
+      if key[pygame.K_w] and self.has_jumped == False and self.in_air == False:
         self.velocity_y = -11
         self.has_jumped = True
       if key[pygame.K_w] == False:
@@ -191,6 +196,7 @@ class Enemy(pygame.sprite.Sprite):
     if abs(self.move_counter) > 35:
       self.move_direction *= -1
       self.move_counter *= -1
+
     
 
 
@@ -260,7 +266,7 @@ tile_data = [
 [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
 [2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
 [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-[2, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+[2, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
 [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 2],
 [2, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 2],
 [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 0, 2],
@@ -294,9 +300,9 @@ class Controller():
     run = True
     main_menu = True
     game_over = 0
+    end_timer = 0
     while run:
       clock.tick(fps)
-      screen.blit(background_img, (0, 0))
 
       if main_menu == True:
         if quit_button.draw():
@@ -305,7 +311,14 @@ class Controller():
         if start_button.draw():
           main_menu = False
       else:
+        screen.blit(background_img, (0, 0))
         level.draw()
+        
+        movement_instructions = textfont.render("Press WAD to move",  1, (255, 255, 255))
+        game_instructions = textfont.render("Get to the mushroom to win", 1, (255, 255, 255))
+        screen.blit(movement_instructions, (40, 500))
+        screen.blit(game_instructions, (40, 525))
+        win_text = textfont.render("YOU WIN!", 1, (255, 255, 0))
   
         if game_over == 0:
           slime_group.update()
@@ -314,8 +327,19 @@ class Controller():
           if restart_button.draw():
             player.reset(100, 625)
             game_over = 0
-        #player has reached the mushroom and won
+
+        if game_over == 2:
+            player.reset(100, 625)
+            game_over = 0
+            end_timer += 1
+            if end_timer == 2:
+              exit()
+
           
+        #player has reached the mushroom and won
+
+
+          #if game_over == 2, blitz you win and then give user button to press (start menu)
         game_over = player.update(game_over)
   
         
