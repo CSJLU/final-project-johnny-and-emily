@@ -1,19 +1,21 @@
 import pygame
-import random
+
+
 
 class Enemy(pygame.sprite.Sprite):
-  def __init__(self):
-    super().__init__(self)
-    self.speed = 1
-    self.image = pygame.image.load("assets/mob.png")
+  def __init__(self, x, y):
+    pygame.sprite.Sprite.__init__(self)
+    slime_img = pygame.image.load('assets/slime.png')
+    self.image = pygame.transform.scale(slime_img, (30, 40))
     self.rect = self.image.get_rect()
-    '''
-    Creates a mob that moves on its own and damages the player
-    '''
-    def update(self):
-        self.rect.x += random.randrange(-self.speed, self.speed+1)
-    '''
-    Allows the mob to move by itself in the x direction 
-
-    Returns a random x value in which the mob will move
-    '''
+    self.rect.x = x
+    self.rect.y = y
+    self.move_direction = 1
+    self.move_counter = 0
+    
+  def update(self):
+    self.rect.x += self.move_direction
+    self.move_counter += 1
+    if abs(self.move_counter) > 35:
+      self.move_direction *= -1
+      self.move_counter *= -1
