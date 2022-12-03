@@ -1,7 +1,7 @@
 import pygame
 from src.my_controller import Controller
 
-
+#global variables 
 pygame.font.init()
 textfont = pygame.font.Font(None, 30) 
 background_img = pygame.image.load('assets/BG.png')
@@ -9,7 +9,6 @@ background_img = pygame.image.load('assets/BG.png')
 end_timer = 0    
 main_menu = True
 game_over = 0
-
 
 
 

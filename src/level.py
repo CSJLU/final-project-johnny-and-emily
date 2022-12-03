@@ -5,7 +5,11 @@ from src.enemy import Enemy
 
 class Level():
   def __init__(self, level_data):
+    '''
+    Initializes the Level
 
+    level_data = number data that determines where each tile is placed
+    '''
     #loads both the dirt and grass images
     dirt_tile = pygame.image.load('assets/dirttile.png')
     grass_tile = pygame.image.load('assets/grasstile.png')
@@ -22,6 +26,7 @@ class Level():
     for row in level_data:
       column_count = 0
       for tile in row:
+        #places grass tile
         if tile == 1:
           grass = pygame.transform.scale(grass_tile, (tile_size, tile_size))
           grass_rect = grass.get_rect()
@@ -29,6 +34,8 @@ class Level():
           grass_rect.y = row_count * tile_size
           tile = (grass, grass_rect)
           self.tile_list.append(tile)
+
+        #places dirt tile
         if tile == 2:
           dirt = pygame.transform.scale(dirt_tile, (tile_size, tile_size))
           dirt_rect = dirt.get_rect()
@@ -36,9 +43,13 @@ class Level():
           dirt_rect.y = row_count * tile_size
           tile = (dirt, dirt_rect)
           self.tile_list.append(tile)
+
+        #places slime
         if tile == 3:
           slime = Enemy(column_count * tile_size, row_count * tile_size - 1)
           self.slime_group.add(slime)
+
+        #places mushroom
         if tile == 4: 
           mushroom = Mushroom(column_count * tile_size, row_count * tile_size - 4)
           self.mushroom_group.add(mushroom)
@@ -47,6 +58,11 @@ class Level():
 
       
   def draw(self,screen):
+    '''
+    Draws the tiles onto the screen
+
+    screen = display
+    '''
     for tile in self.tile_list:
       screen.blit(tile[0], tile[1])
 

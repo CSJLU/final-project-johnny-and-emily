@@ -2,30 +2,51 @@ import pygame
 from src.constants import *
 
 class Player():
-  def __init__(self, x, y,screen):
+  def __init__(self, x, y, screen):
+    '''
+    Initializes the Player
+
+    screen = display
+    x(int) = x coordinate of the player
+    y(int) = y coordinate of the player
+    '''
     self.screen = screen
     self.reset(x, y)
 
-  def update(self, game_over,level):
+  def update(self, game_over, level):
+    '''
+    Updates the character frame by frame depending on user input
+    
+    level(int) = the layout of the tiles 
+    game_over(int) = helps determine what game state that game should be in
+    '''
     dx = 0
     dy = 0
     walk_cd = 1
     if game_over == 0:
     #gets key pressed inputs
       key = pygame.key.get_pressed()
+      #if a pressed, player will move left
       if key[pygame.K_a]:
         dx -= 4
         self.counter += 1
         self.direction = -1
+      #if d pressed, player will move right
       if key[pygame.K_d]:
         dx += 4
         self.counter += 1
         self.direction = 1
+
+      #allows the player to jump only if they are on the tile/floor
       if key[pygame.K_w] and self.has_jumped == False and self.in_air == False:
         self.velocity_y = -11
         self.has_jumped = True
+        
+      #determines whether or not the player has jumped or not through recognization of w key pressed
       if key[pygame.K_w] == False:
         self.has_jumped = False
+        
+      #idle 
       if key[pygame.K_a] == False and key[pygame.K_d] == False:
         self.counter = 0 
         self.index = 0
@@ -46,14 +67,13 @@ class Player():
           self.image = self.images_left[self.index]
   
     
-  #if collide, allowed to jump
-  
-        
+         
       #creates gravity effect
       self.velocity_y += 1
       if self.velocity_y > 10:
         self.velocity_y = 10
       dy += self.velocity_y
+      
   
       #collision with grass and dirt tiles
       self.in_air = True
@@ -70,18 +90,22 @@ class Player():
           elif self.velocity_y >= 0:
             dy = tile[1].top - self.rect.bottom
             self.in_air = False
-  
+
+            
       #collision with enemies
       if pygame.sprite.spritecollide(self, level.slime_group, False):
         game_over = 1
 
+        
       #check collision with mushroom
       if pygame.sprite.spritecollide(self, level.mushroom_group, False):
         game_over = 2
-            
+
+      
       self.rect.x += dx
       self.rect.y += dy
-  
+
+    
     elif game_over == 1:
       self.image = self.image_dead
     #puts player onto bottom of screen
@@ -89,7 +113,16 @@ class Player():
 
     return game_over 
 
-  def reset(self, x, y):
+  
+  def reset(self, x, y):    
+    '''
+    Gives the Player animation
+    
+    x(int) = x cooridinate of the player
+    y(int) = y coordinate of the player
+    
+    Returns a player that can be created and utilized by the user 
+    '''
     self.images_right = []
     self.images_left = []
     self.index = 0

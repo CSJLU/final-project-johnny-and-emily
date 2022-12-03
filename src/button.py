@@ -3,13 +3,26 @@ import pygame
 
 class Button():
   def __init__(self, x, y, image):
+    '''
+    Initializes the button
+
+    x(int) = x coordinate of the button
+    y(int) = y coordinate of the button
+    image = picture of the button
+    '''
     self.image = image
     self.rect = self.image.get_rect()
     self.rect.x = x
     self.rect.y = y
     self.clicked = False
 
-  def draw(self,screen):
+  def draw(self, screen):
+    '''
+    Displays the button onto the screen and checks if it has been clicked
+
+    screen = display
+    '''
+
     click_action = False
 
     #mouse position is obtained
@@ -29,3 +42,6 @@ class Button():
     #draws the button
     screen.blit(self.image, self.rect)
     return click_action
+'''
+
+'''
