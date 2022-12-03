@@ -4,7 +4,7 @@
 ###  Fall, 2022 
 ### [Assignment Description](https://docs.google.com/document/d/1H4R6yLL7som1lglyXWZ04RvTp_RvRFCCBn6sqv-82ps/edit?usp=sharing)
 
-https://replit.com/join/cvruezeqem-johnnylu1
+https://github.com/CSJLU/final-project-johnny-and-emily/commit/594708f7ec22d13e565a5964cc1a15109f93290f
 
 ### Team: 25
 ####  Johnny Lu and Emily Mendez
